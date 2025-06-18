@@ -40,11 +40,24 @@ function ToastProvider({ children }) {
     setToastList(newToastList);
   }
 
+  function useEscapeKey(event) {
+    if (event.key !== 'Escape') {
+      return null;
+    }
+
+    for (let toast in toastList) {
+      handleDismiss(toast.id);
+      setToastList([]);
+    }
+  }
+
   return (
     <MessageContext value={messages}>
       <VariantContext value={variants}>
         <ToastListContext value={toastLists}>
-          <Controls value={{ handleSubmit, handleDismiss }}>
+          <Controls
+            value={{ handleSubmit, handleDismiss, useEscapeKey }}
+          >
             {children}
           </Controls>
         </ToastListContext>
