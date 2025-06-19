@@ -16,21 +16,13 @@ function ToastPlayground() {
   const { variantInput, setVariantInput } =
     React.useContext(VariantContext);
 
-  const { handleSubmit, useEscapeKey } = React.useContext(Controls);
+  const { handleSubmit } = React.useContext(Controls);
 
   const focusRef = React.useRef();
 
   React.useEffect(() => {
     focusRef.current.focus();
   }, []);
-
-  React.useEffect(() => {
-    window.addEventListener('keydown', useEscapeKey);
-
-    return () => {
-      window.removeEventListener('keydown', useEscapeKey);
-    };
-  }, [useEscapeKey]);
 
   return (
     <div className={styles.wrapper}>

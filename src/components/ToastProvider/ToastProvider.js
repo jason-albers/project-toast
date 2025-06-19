@@ -1,5 +1,5 @@
 import React from 'react';
-
+import useEscapeKey from '../../hooks/useEscapeKey';
 export const MessageContext = React.createContext();
 export const VariantContext = React.createContext();
 export const ToastListContext = React.createContext();
@@ -15,20 +15,22 @@ function ToastProvider({ children }) {
   const toastLists = { toastList, setToastList };
 
   function handleSubmit() {
-    setToastList([
-      ...toastList,
-      {
-        id: `${
-          messageInput.slice(1, 6) +
-          Math.random() * 100 +
-          variantInput
-        }`,
-        message: messageInput,
-        variant: variantInput,
-      },
-    ]);
-    setMessageInput('');
-    setVariantInput('notice');
+    if (messageInput.length > 0) {
+      setToastList([
+        ...toastList,
+        {
+          id: `${
+            messageInput.slice(1, 6) +
+            Math.random() * 100 +
+            variantInput
+          }`,
+          message: messageInput,
+          variant: variantInput,
+        },
+      ]);
+      setMessageInput('');
+      setVariantInput('notice');
+    }
   }
 
   function handleDismiss(id) {
@@ -40,16 +42,12 @@ function ToastProvider({ children }) {
     setToastList(newToastList);
   }
 
-  function useEscapeKey(event) {
-    if (event.key !== 'Escape') {
-      return null;
-    }
-
+  useEscapeKey(() => {
     for (let toast in toastList) {
       handleDismiss(toast.id);
-      setToastList([]);
     }
-  }
+    setToastList([]);
+  });
 
   return (
     <MessageContext value={messages}>
